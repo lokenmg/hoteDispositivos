@@ -1,44 +1,50 @@
 import React, { useState, useEffect } from 'react';
 import mqtt from 'mqtt';
 
-const MQTTBroker = 'ws://localhost:8083/mqtt'; 
+const dispositivo = "sensor"
+const MQTTBroker = 'ws://localhost:8083/mqtt';
 
-
-const MotionDetector = ({habitacion, id}) => {
+const MotionDetector = ({ habitacion, id }) => {
   const [isMotionDetected, setIsMotionDetected] = useState(false);
   const [client, setClient] = useState(null);
 
   useEffect(() => {
-    const mqttClient = mqtt.connect(MQTTBroker,{
-        clientId: 'emqx_test',
-        username: 'emqx_test',
-        password: 'emqx_test',
-      });
+    const mqttClient = mqtt.connect(MQTTBroker, {
+      clientId: 'emqx_test',
+      username: 'emqx_test',
+      password: 'emqx_test',
+    });
 
     mqttClient.on('connect', () => {
-      
       setClient(mqttClient);
-      mqttClient.subscribe(`hotel/habitación${habitacion}/sensor${id}`); // Suscribirse al tópico de movimiento al conectarse
+      mqttClient.subscribe(`hotel/habitación${habitacion}/sensor${id}`);
     });
 
     mqttClient.on('message', (topic, message) => {
       if (topic === `hotel/habitación${habitacion}/sensor${id}`) {
-        const motionStatus = message.toString();
-        setIsMotionDetected(motionStatus === '1');
+        const payload = JSON.parse(message.toString()); // Parsear el mensaje recibido como JSON
+        const { id, habitacion, dispositivo, status } = payload; // Extraer los datos del payload
+        setIsMotionDetected(status === '1');
       }
     });
 
     const generateMotionStatus = () => {
-      const motionStatus = Math.random() < 0.5 ? '0' : '1'; // Genera un número aleatorio entre 0 y 1
-      mqttClient.publish(`hotel/habitación${habitacion}/sensor${id}`, motionStatus);
+      const motionStatus = Math.random() < 0.5 ? 'No se detecta movimiento' : 'Movimiento detectado';
+      const payload = {
+        id,
+        habitacion,
+        dispositivo,
+        status: motionStatus
+      };
+      mqttClient.publish(`hotel/habitación${habitacion}/sensor${id}`, JSON.stringify(payload)); // Enviar el payload como JSON
     };
 
-    const motionStatusInterval = setInterval(generateMotionStatus, 2000); // Genera un nuevo estado cada 2 segundos
+    const motionStatusInterval = setInterval(generateMotionStatus, 2000);
 
     return () => {
       if (client) {
         clearInterval(motionStatusInterval);
-        client.unsubscribe(`hotel/habitación${habitacion}/sensor${id}`); // Desuscribirse del tópico al desconectarse
+        client.unsubscribe(`hotel/habitación${habitacion}/sensor${id}`);
         client.end();
       }
     };

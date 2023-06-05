@@ -17,7 +17,6 @@ function App() {
       <TvtSwitch habitacion="1" id="2"/>
       <h2>Detectores de movimiento</h2>
       
-
       <p1>Habitacion 2</p1>
       <h2>Focos</h2>
       <LightSwitch habitacion="2" id="1" />

@@ -1,6 +1,8 @@
 //Realizamos las importaciones necesarias
+
 import React, { useState, useEffect } from 'react';
 import mqtt from 'mqtt';
+const dispositivo = "foco"
 
 //Se declara el URL del broker MQTT
 const MQTTBroker = 'ws://localhost:8083/mqtt';

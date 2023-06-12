@@ -24,6 +24,7 @@ const MotionDetector = ({ habitacion, id }) => {
       if (topic === `hotel/habitación${habitacion}/sensor${id}`) {
         const payload = JSON.parse(message.toString()); // Parsear el mensaje recibido como JSON
         const { id, habitacion, dispositivo, status } = payload; // Extraer los datos del payload
+
         setIsMotionDetected(status === 1);
       }
     });

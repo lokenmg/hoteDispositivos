@@ -21,6 +21,7 @@ function App() {
       <MotionDetector habitacion="1" id="5"/>
       <MotionDetector habitacion="1" id="6"/>   */}
 
+
       <p1>Habitacion 2</p1>
       <h2>Focos</h2>
       <LightSwitch habitacion="2" id="7" />

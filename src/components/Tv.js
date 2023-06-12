@@ -3,6 +3,7 @@ import mqtt from 'mqtt';
 const dispositivo = "tv"
 
 const MQTTBroker = 'ws://localhost:8083/mqtt'; // Reemplaza con la URL de tu broker MQTT
+const dispositivo = "television"
 
 const TvtSwitch = ({habitacion, id }) => {
   const [isOn, setIsOn] = useState(false);
@@ -23,7 +24,7 @@ const TvtSwitch = ({habitacion, id }) => {
 
     mqttClient.on('message', (topic, message) => {
       const payload = JSON.parse(message.toString());
-      setIsOn(payload.status === 'encendido');
+      setIsOn(payload.status === 1);
     });
 
     return () => {
@@ -36,17 +37,24 @@ const TvtSwitch = ({habitacion, id }) => {
 
   const publishStatus = (status) => {
     if (client) {
-      const payload = JSON.stringify({ habitacion, dispositivo, id, status });
+      const payload = JSON.stringify({ 
+        id, 
+        dispositivo,
+        status,
+        "habitacion":{
+          "numero": habitacion
+        }
+       });
       client.publish(`hotel/habitación${habitacion}/tv${id}`, payload);
     }
   };
 
   const turnOn = () => {
-    publishStatus('encendido');
+    publishStatus(1);
   };
 
   const turnOff = () => {
-    publishStatus('apagado');
+    publishStatus(0);
   };
 
   return (

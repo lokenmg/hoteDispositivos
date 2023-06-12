@@ -24,17 +24,20 @@ const MotionDetector = ({ habitacion, id }) => {
       if (topic === `hotel/habitación${habitacion}/sensor${id}`) {
         const payload = JSON.parse(message.toString()); // Parsear el mensaje recibido como JSON
         const { id, habitacion, dispositivo, status } = payload; // Extraer los datos del payload
-        setIsMotionDetected(status === '1');
+
+        setIsMotionDetected(status === 1);
       }
     });
 
     const generateMotionStatus = () => {
-      const motionStatus = Math.random() < 0.5 ? 'No se detecta movimiento' : 'Movimiento detectado';
+      const motionStatus = Math.random() < 0.5 ? 0 : 1;
       const payload = {
         id,
-        habitacion,
         dispositivo,
-        status: motionStatus
+        status: motionStatus,
+        "habitacion":{
+          "numero": habitacion
+        }
       };
       mqttClient.publish(`hotel/habitación${habitacion}/sensor${id}`, JSON.stringify(payload)); // Enviar el payload como JSON
     };
@@ -53,7 +56,7 @@ const MotionDetector = ({ habitacion, id }) => {
   return (
     <div>
       <h2>Detector de Movimiento</h2>
-      <p>Estado: {isMotionDetected ? 'Movimiento detectado' : 'No se detecta movimiento'}</p>
+      <p>Estado: {isMotionDetected ? '1' : '0'}</p>
     </div>
   );
 };

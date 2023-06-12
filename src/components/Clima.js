@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import mqtt from 'mqtt';
 
 const MQTTBroker = 'ws://localhost:8083/mqtt'; // Reemplaza con la URL de tu broker MQTT
+const dispositivo = "clima"
 
 const ClimaSwitch = ({habitacion, id }) => {
   const [isOn, setIsOn] = useState(false);
@@ -22,7 +23,7 @@ const ClimaSwitch = ({habitacion, id }) => {
 
     mqttClient.on('message', (topic, message) => {
       const payload = JSON.parse(message.toString());
-      setIsOn(payload.status === 'encendido');
+      setIsOn(payload.status === 1);
     });
 
     return () => {
@@ -35,17 +36,24 @@ const ClimaSwitch = ({habitacion, id }) => {
 
   const publishStatus = (status) => {
     if (client) {
-      const payload = JSON.stringify({ habitacion, id, status });
+      const payload = JSON.stringify({  
+        id, 
+        status,
+        dispositivo,
+        "habitacion":{
+          "numero": habitacion
+        }
+       });
       client.publish(`hotel/habitación${habitacion}/clima${id}`, payload);
     }
   };
 
   const turnOn = () => {
-    publishStatus('encendido');
+    publishStatus(1);
   };
 
   const turnOff = () => {
-    publishStatus('apagado');
+    publishStatus(0);
   };
 
   return (

@@ -6,7 +6,6 @@ const dispositivo = "foco"
 
 //Se declara el URL del broker MQTT
 const MQTTBroker = 'ws://localhost:8083/mqtt';
-const dispositivo = "foco"
 
 //Se declara el componente LightSwitch que recibe como parámetros habitación e id del broker
 const LightSwitch = ({habitacion, id }) => {

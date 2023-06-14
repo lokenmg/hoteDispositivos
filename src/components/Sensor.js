@@ -11,7 +11,7 @@ const MotionDetector = ({ habitacion, id }) => {
   useEffect(() => {
     const mqttClient = mqtt.connect(MQTTBroker, {
       clientId: 'emqx_test',
-      username: 'emqx_test',
+      username: 'hola',
       password: 'emqx_test',
     });
 

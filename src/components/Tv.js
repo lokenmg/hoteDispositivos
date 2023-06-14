@@ -3,7 +3,6 @@ import mqtt from 'mqtt';
 const dispositivo = "tv"
 
 const MQTTBroker = 'ws://localhost:8083/mqtt'; // Reemplaza con la URL de tu broker MQTT
-const dispositivo = "television"
 
 const TvtSwitch = ({habitacion, id }) => {
   const [isOn, setIsOn] = useState(false);
@@ -12,7 +11,7 @@ const TvtSwitch = ({habitacion, id }) => {
   useEffect(() => {
     const mqttClient = mqtt.connect(MQTTBroker, {
       clientId: 'emqx_test',
-      username: 'emqx_test',
+      username: 'hola',
       password: 'emqx_test',
     });
 

@@ -6,7 +6,6 @@ const dispositivo = "foco"
 
 //Se declara el URL del broker MQTT
 const MQTTBroker = 'ws://localhost:8083/mqtt';
-const dispositivo = "foco"
 
 //Se declara el componente LightSwitch que recibe como parámetros habitación e id del broker
 const LightSwitch = ({habitacion, id }) => {
@@ -16,15 +15,15 @@ const LightSwitch = ({habitacion, id }) => {
 //Se declara el useEffect el cual contiene la informacion del cliente
   useEffect(() => {
     const mqttClient = mqtt.connect(MQTTBroker, {
-      clientId: 'emqx_test',
-      username: 'emqx_test',
+      clientId: 'emqx_node',
+      username: 'nodesrv',
       password: 'emqx_test',
     });
 
 //Se declara el cliente y se suscribe al tópico de foco al conectarse
     mqttClient.on('connect', () => {
       setClient(mqttClient);
-      mqttClient.subscribe(`hotel/foco${id}/habitación${habitacion}`);
+      mqttClient.subscribe(`hotel/habitación${habitacion}/foco${id}`);
     });
 
 //Se declara el mensaje que se recibe del tópico de foco
@@ -35,7 +34,7 @@ const LightSwitch = ({habitacion, id }) => {
 
     return () => {
       if (client) {
-        client.unsubscribe(`hotel/foco${id}/habitación${habitacion}`);
+        client.unsubscribe(`hotel/habitación${habitacion}/foco${id}`);
         client.end();
       }
     };
@@ -52,7 +51,7 @@ const LightSwitch = ({habitacion, id }) => {
           "numero": habitacion
         }
        });
-      client.publish(`hotel/foco${id}/habitación${habitacion}`, payload);
+      client.publish(`hotel/habitación${habitacion}/foco${id}`, payload);
     }
   };
 
